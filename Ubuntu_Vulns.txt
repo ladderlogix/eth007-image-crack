@@ -1,0 +1,838 @@
+DisableRemoteEncryption = false
+Local = true
+Shell = false
+EndDate = ""
+Name = "msf24_ubu22"
+OS = "Ubuntu 22"
+Password = "DYtmZtmqIcZQSbZ"
+Remote = "https://arena.eth007.me"
+Title = "Ubuntu 22"
+User = "joy"
+Version = "2.1.1"
+
+[[Check]]
+  Message = "Forensics Question 1 correct"
+  Hint = ""
+  Points = 5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/joy/Desktop/Forensics Question 1.txt"
+    Value = "ANSWER:\s*logstash_internal"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/joy/Desktop/Forensics Question 1.txt"
+    Value = "ANSWER:\s*zCoDFjtgwgpdkwempVweisoYRktyDwRx"
+
+[[Check]]
+  Message = "Forensics Question 2 correct"
+  Hint = ""
+  Points = 5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/joy/Desktop/Forensics Question 2.txt"
+    Value = "ANSWER:\s*127\.0\.0\.1"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/joy/Desktop/Forensics Question 2.txt"
+    Value = "ANSWER:\s*192\.168\.159\.1"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/joy/Desktop/Forensics Question 2.txt"
+    Value = "ANSWER:\s*759"
+
+[[Check]]
+  Message = "Forensics Question 3 correct"
+  Hint = ""
+  Points = 5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/joy/Desktop/Forensics Question 3.txt"
+    Value = "ANSWER:\s*It's not made out of solid gold like we thought, which is kind of a disappointment, but still!"
+
+[[Check]]
+  Message = "Forensics Question 4 correct"
+  Hint = ""
+  Points = 5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/joy/Desktop/Forensics Question 4.txt"
+    Value = "ANSWER:\\s*9c2d990e6de53271845f7ca628e11347e7ec6f1ed56e38525a8f9b5f494698c44043898884a2c4f9a4e2e7caa139bc6827dc67a850188feb9ffda3"
+
+[[Check]]
+  Message = "Removed unauthorized user gloom"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+    User = "gloom"
+
+[[Check]]
+  Message = "Removed hidden root user dev"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "dev"
+
+[[Check]]
+  Message = "User bingbong is not an administrator"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "UserInGroupNot"
+    Path = ""
+
+    User = "bingbong"
+    Group = "sudo"
+
+[[Check]]
+  Message = "Removed password login for system user bin"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsNot"
+    Path = "/etc/shadow"
+
+    Value = "bin:$"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/shadow"
+    Value = "^bin:"
+
+[[Check]]
+  Message = "Failed logins do not authenticate"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/pam.d/common-auth"
+    Value = "^[^#]*auth\s*requisite\s*pam_permit.so"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/pam.d/common-auth"
+    Value = "^[^#]*auth\s*required\s*pam_permit.so"
+
+[[Check]]
+  Message = "Previous passwords are remembered"
+  Hint = ""
+  Points = 2
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/pam.d/common-password"
+    Value = "^[^#]*pam_unix.so.*remember"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/pam.d/common-password"
+    Value = "^[^#]*pam_pwhistory.so"
+
+[[Check]]
+  Message = "Sudo does not preserve environment variables"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/sudoers"
+    Value = "Defaults"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/sudoers"
+    Value = "^[^#]*Defaults\s*!.*env_reset"
+
+[[Check]]
+  Message = "Sudo developer mode disabled"
+  Hint = ""
+  Points = 2
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/sudo.conf"
+    Value = "^[^#]*[sS]et developer_mode [tT]rue"
+
+[[Check]]
+  Message = "Unprivileged access to kernel syslog restricted"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContains"
+    Path = "/proc/sys/kernel/dmesg_restrict"
+    Value = "1"
+
+[[Check]]
+  Message = "TCP SYN,ACK retries increased"
+  Hint = ""
+  Points = 1
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "FileContains"
+    Path = "/proc/sys/net/ipv4/tcp_synack_retries"
+    Value = "2"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "FileContains"
+    Path = "/proc/sys/net/ipv4/tcp_synack_retries"
+    Value = "1"
+
+[[Check]]
+  Message = "Uncomplicated Firewall (UFW) protection has been enabled"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/ufw/ufw.conf"
+    Value = "^[^#]*ENABLED\s*=\s*yes"
+
+[[Check]]
+  Message = "Root user is not allowed to log in through GDM"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/pam.d/gdm-password"
+    Value = "^[^#]*auth\s*required\s*pam_succeed_if.so\s*user\s*!=\s*root\s*quiet_success"
+
+[[Check]]
+  Message = "Stricter defaults enabled on shared memory"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/proc/mounts"
+    Value = "/dev/shm.*noexec"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/proc/mounts"
+    Value = "/dev/shm.*nosuid"
+
+[[Check]]
+  Message = "Fixed insecure permissions on Kibana service file"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PermissionIsNot"
+    Path = "/etc/systemd/system/kibana.service"
+    Value = "????????w?"
+
+[[Check]]
+  Message = "Fixed insecure permissions on Logstash configuration file"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PermissionIsNot"
+    Path = "/etc/logstash/logstash.yml"
+    Value = "????????w?"
+
+[[Check]]
+  Message = "Fixed insecure permissions on group file"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PermissionIsNot"
+    Path = "/etc/group"
+    Value = "????????w?"
+
+[[Check]]
+  Message = "Set up SSH public key authentication for user anger"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/home/anger/.ssh/authorized_keys"
+    Value = "^ssh-rsa.*"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PermissionIsNot"
+    Path = "/home/anger/.ssh/authorized_keys"
+    Value = "????????w?"
+
+[[Check]]
+  Message = "Rsyslog service is started and enabled"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "ad472e0b532b9675454d7496d9dfebde01e9d3515eb99c5306076d8cd4831c9b523dc4bef18b2b003172fc5e53490fd83e7bb7cbede92b0dd21be1ed"
+    Path = ""
+
+    Name = "ServiceUp"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "CommandContains"
+    Path = ""
+    Cmd = "systemctl is-enabled rsyslog"
+
+    Value = "enabled"
+
+[[Check]]
+  Message = "Rsync service is stopped and disabled"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "ServiceUpNot"
+    Path = ""
+
+    Name = "rsync"
+
+[[Check]]
+  Message = "OpenSSL has been updated"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileEqualsNot"
+    Path = "/usr/bin/openssl"
+    Value = "1d8e6176336b754e713e1e897b54c82d03ed99c4c4f8585955118e5476851cdb"
+
+[[Check]]
+  Message = "Removed file containing PII from Samba share"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/srv/train/.info.db"
+
+[[Check]]
+  Message = "Removed SSH key from Downloads folder"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/home/sadness/Downloads/id_rsa"
+
+[[Check]]
+  Message = "Removed file containing plaintext Elasticsearch credentials"
+  Hint = ""
+  Points = 3
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/home/joy/Documents/important/backup.txt"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/home/joy/Documents/important/"
+
+[[Check]]
+  Message = "Removed appctl backdoor"
+  Hint = ""
+  Points = 3
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/usr/share/bin/appctl"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/etc/systemd/system/appctl.service"
+
+[[Check]]
+  Message = "Removed netcat backdoor"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/etc/network/if-up.d/wifi-adapter"
+
+[[Check]]
+  Message = "Prohibited software zmap removed"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/usr/sbin/zmap"
+
+[[Check]]
+  Message = "Prohibited software sucrack removed"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/usr/bin/sucrack"
+
+[[Check]]
+  Message = "Prohibited software endless-sky removed"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/usr/games/endless-sky"
+
+[[Check]]
+  Message = "Firefox checks the current validity of certificates"
+  Hint = ""
+  Points = 1
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "DirContainsNot"
+    Path = "/home/joy/.mozilla/"
+
+    Value = "user_pref("security.OCSP.enabled", 0);"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExists"
+    Path = "/home/joy/.mozilla/firefox/"
+
+[[Check]]
+  Message = "SSH client agent forwarding disabled"
+  Hint = ""
+  Points = 2
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/ssh/ssh_config"
+    Value = "^[^#]*ForwardAgent\s*[yY][eE][sS]"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "DirContainsRegexNot"
+    Path = "/etc/ssh/"
+    Value = "^[^#]*ForwardAgent\s*[yY][eE][sS]"
+
+[[Check]]
+  Message = "SSH does not process user environment variables"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/ssh/sshd_config"
+    Value = "^[^#]*PermitUserEnvironment\s*[yY][eE][sS]"
+
+[[Check]]
+  Message = "Samba encryption is required"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/samba/smb.conf"
+    Value = "^[^#;]*smb\s*encrypt\s*=\s*[rR]equired"
+
+[[Check]]
+  Message = "Samba SMB1 protocol disabled"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/samba/smb.conf"
+    Value = "^[^#;]*min\s*protocol\s*=\s*LANMAN1"
+
+[[Check]]
+  Message = "Removed unauthorized Samba share"
+  Hint = ""
+  Points = 2
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/samba/smb.conf"
+    Value = "^[^#;]*\[syslog\]"
+
+[[Check]]
+  Message = "Elasticsearch only listens on the local interface"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/elasticsearch/elasticsearch.yml"
+    Value = "^[^#]*network.host:\s*0.0.0.0"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/elasticsearch/elasticsearch.yml"
+    Value = "^[^#]*cluster.name"
+
+[[Check]]
+  Message = "Elasticsearch security enforcable mode enabled"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/elasticsearch/elasticsearch.yml"
+
+    Value = "^[^#]*security.enforcable:\s*[tT]rue"
+
+[[Check]]
+  Message = "Elasticsearch requires explicit names when deleting indices"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/elasticsearch/elasticsearch.yml"
+    Value = "^[^#]*action.destructive_requires_name:\s*[fF]alse"
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/elasticsearch/elasticsearch.yml"
+    Value = "^[^#]*cluster.name"
+
+[[Check]]
+  Message = "Kibana cookies cannot be sent through cross-site requests"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/kibana/kibana.yml"
+    Value = "^[^#]*xpack.security.sameSiteCookies:\s*"Strict""
+
+[[Check]]
+  Message = "Kibana audit logging enabled"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegex"
+    Path = "/etc/kibana/kibana.yml"
+    Value = "^[^#]*xpack.security.audit.enabled:\s*true"
+
+[[Check]]
+  Message = "Filebeat collects NGINX error logs"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "CommandContainsRegex"
+    Path = ""
+    Cmd = "grep error: /etc/filebeat/modules.d/nginx.yml -A 5"
+    Value = "^[^#]*enabled:\s*[tT]rue"
+
+[[Check]]
+  Message = "Filebeat system logs module enabled"
+  Hint = ""
+  Points = 3
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "PathExists"
+    Path = "/etc/filebeat/modules.d/system.yml"
+
+[[Check]]
+  Message = "Removed one or more authorized administrators"
+  Hint = ""
+  Points = -5
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "joy"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserInGroupNot"
+    Path = ""
+
+    User = "joy"
+    Group = "sudo"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "fear"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserInGroupNot"
+    Path = ""
+    User = "fear"
+    Group = "sudo"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "sadness"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserInGroupNot"
+    Path = ""
+    User = "sadness"
+    Group = "sudo"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+    User = "anger"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserInGroupNot"
+    Path = ""
+
+    User = "anger"
+    Group = "sudo"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "disgust"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserInGroupNot"
+    Path = ""
+
+    User = "disgust"
+    Group = "sudo"
+
+[[Check]]
+  Message = "Removed one or more authorized users"
+  Hint = ""
+  Points = -5
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "bingbong"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "frank"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "dave"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "paula"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "bobby"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "UserExistsNot"
+    Path = ""
+
+    User = "fritz"
+
+[[Check]]
+  Message = "Removed critical files from Samba share"
+  Hint = ""
+  Points = -5
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/srv/train/anxiety.png"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/srv/train/emotions.jpg"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/srv/train/secretplans.jpg"
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "PathExistsNot"
+    Path = "/srv/train/"
+
+[[Check]]
+  Message = "Removed authorized Samba share"
+  Hint = ""
+  Points = -5
+
+  [[Check.PassOverride]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/samba/smb.conf"
+    Value = "^[^#;]*\[train\]"
+
+[[Check]]
+  Message = "Elasticsearch service is not running"
+  Hint = ""
+  Points = -5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "ServiceUpNot"
+    Path = ""
+    Name = "elasticsearch"
+
+[[Check]]
+  Message = "Kibana service is not running"
+  Hint = ""
+  Points = -5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "ServiceUpNot"
+    Path = ""
+
+    Name = "kibana"
+
+[[Check]]
+  Message = "Logstash service is not running"
+  Hint = ""
+  Points = -5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "ServiceUpNot"
+    Path = ""
+
+    Name = "logstash"
+
+[[Check]]
+  Message = "Filebeat service is not running"
+  Hint = ""
+  Points = -5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "ServiceUpNot"
+    Path = ""
+
+    Name = "filebeat"
+
+[[Check]]
+  Message = "NGINX service is not running"
+  Hint = ""
+  Points = -5
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "ServiceUpNot"
+    Path = ""
+
+    Name = "nginx"
+
+[[Check]]
+  Message = "Engine manipulation detected"
+  Hint = ""
+  Points = -1000
+
+  [[Check.Pass]]
+    Hint = ""
+    Type = "FileContainsRegexNot"
+    Path = "/etc/machine-id"
+
+    Value = "e45ba6ec075847048a3bab6701b7e364"
